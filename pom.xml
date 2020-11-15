@@ -21,6 +21,11 @@
             <version>2.5.1</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.30</version>
@@ -55,7 +60,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.github.jishnuc.kafka.KafkaStreamsApp</mainClass>
+                            <mainClass>com.github.jishnuc.kafka.KafkaApp</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

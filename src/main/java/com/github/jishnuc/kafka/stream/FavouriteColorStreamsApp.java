@@ -1,4 +1,4 @@
-package com.github.jishnuc.kafka;
+package com.github.jishnuc.kafka.stream;
 
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
@@ -15,7 +15,7 @@ public class FavouriteColorStreamsApp extends KafkaStreamsApp{
     public FavouriteColorStreamsApp(String... topics) throws ExecutionException, InterruptedException {
         super(topics);
     }
-
+    @Override
     public void run(){
         StreamsBuilder builder=new StreamsBuilder();
 

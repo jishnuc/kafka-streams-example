@@ -1,4 +1,4 @@
-package com.github.jishnuc.kafka;
+package com.github.jishnuc.kafka.stream;
 
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -15,6 +15,7 @@ public class WordCountStreamsApp extends KafkaStreamsApp {
     public WordCountStreamsApp(String... topics) throws ExecutionException, InterruptedException {
         super(topics);
     }
+    @Override
     public void run(){
         //Word Count
         StreamsBuilder builder=new StreamsBuilder();
