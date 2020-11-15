@@ -1,49 +1,56 @@
 package com.github.jishnuc.kafka;
 
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
-import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.StreamsConfig;
-import org.apache.kafka.streams.Topology;
-import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Named;
 
-import java.util.Arrays;
-import java.util.Properties;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class KafkaStreamsApp {
-    public static void main(String[] args) {
-        System.out.println("Hello World");
-        Properties prop=new Properties();
-        prop.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-streams-example");
-        prop.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        prop.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        prop.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        prop.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        //Word Count
-        StreamsBuilder builder=new StreamsBuilder();
 
-        KStream<String,String> wordCountInput=builder.stream("word-count-input");
+    protected Properties properties;
 
-        KTable<String,Long> wordCounts=wordCountInput
-                                        .mapValues(textLine->textLine.toLowerCase())
-                                        .flatMapValues(lowerCaseTextLine-> Arrays.asList(lowerCaseTextLine.split(" ")))
-                                        .selectKey((ignoredKey,word)->word)
-                                        .groupByKey()
-                                        .count(Named.as("Counts"));
-        wordCounts.toStream().to("word-count-output");
+    public KafkaStreamsApp(String... topics) throws ExecutionException, InterruptedException {
+        properties=new Properties();
+        properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-streams-example");
+        properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        properties.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
-        Topology topology=builder.build(prop);
+        AdminClient admin = AdminClient.create(properties);
+        System.out.println("-- creating  topics--");
+        //creating topics if not already there
+        admin.createTopics(Arrays.stream(topics).map(topic->new NewTopic(topic, 1, (short)1))
+                .collect(Collectors.toList()));
 
-        KafkaStreams streams= new KafkaStreams(topology,prop);
-        streams.start();
-
-        System.out.println(streams.toString());
-
-        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+        //listing
+        System.out.println("-- listing topics--");
+        admin.listTopics().names().get().forEach(System.out::println);
 
 
+
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        System.out.println(".............Starting the KafkaStreamsApp.....");
+        System.out.println("Enter program you want to run");
+        System.out.println("1. Word Count");
+        System.out.println("2. Favourite Color");
+        Scanner in= new Scanner(System.in);
+        String choice = in.nextLine();
+        switch(choice){
+            case "1": WordCountStreamsApp wc=new WordCountStreamsApp("word-count-input","word-count-output");
+                        wc.run();
+                        break;
+            case "2": FavouriteColorStreamsApp fc=new FavouriteColorStreamsApp("user-color-input","user-color","color-count-output") ;
+                        fc.run();
+            default:
+                throw new IllegalStateException("Unexpected value: " + choice);
+        }
     }
 }
