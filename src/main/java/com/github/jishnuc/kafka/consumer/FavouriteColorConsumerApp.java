@@ -5,12 +5,15 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.serialization.LongDeserializer;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 public class FavouriteColorConsumerApp extends KafkaConsumerApp {
+    private static Logger logger = LogManager.getLogger(FavouriteColorConsumerApp.class);
     public FavouriteColorConsumerApp(String... topics) throws ExecutionException, InterruptedException {
         super(topics);
         properties.put(ConsumerConfig.GROUP_ID_CONFIG, "word-count");

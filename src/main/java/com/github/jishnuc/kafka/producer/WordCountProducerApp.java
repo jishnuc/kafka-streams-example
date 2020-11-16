@@ -2,11 +2,14 @@ package com.github.jishnuc.kafka.producer;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 public class WordCountProducerApp extends KafkaProducerApp{
+    private static Logger logger = LogManager.getLogger(WordCountProducerApp.class);
     public WordCountProducerApp(String topic) throws ExecutionException, InterruptedException {
         super(topic);
     }
@@ -21,7 +24,7 @@ public class WordCountProducerApp extends KafkaProducerApp{
         }));
 
         while (true){
-            System.out.println(">");
+            logger.info(">");
             ProducerRecord<String,String> record=new ProducerRecord<>(topic, in.nextLine());
             producer.send(record);
         }

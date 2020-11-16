@@ -7,11 +7,13 @@ import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Named;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.concurrent.ExecutionException;
 
 public class FavouriteColorStreamsApp extends KafkaStreamsApp{
-
+    private static Logger logger = LogManager.getLogger(FavouriteColorStreamsApp.class);
     public FavouriteColorStreamsApp(String... topics) throws ExecutionException, InterruptedException {
         super(topics);
     }
@@ -37,9 +39,9 @@ public class FavouriteColorStreamsApp extends KafkaStreamsApp{
 
         KafkaStreams streams=new KafkaStreams(colorTopology, properties);
         streams.start();
-        System.out.println("-------Streams Application-----");
-        System.out.println(colorTopology.describe());
-        System.out.println("-------Streams Application-----");
+        logger.info("-------Streams Application-----");
+        logger.info(colorTopology.describe());
+        logger.info("-------Streams Application-----");
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
         
         

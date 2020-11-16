@@ -5,6 +5,8 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -12,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public abstract class KafkaStreamsApp {
-
+    private static Logger logger = LogManager.getLogger(KafkaStreamsApp.class);
     protected Properties properties;
 
     public KafkaStreamsApp(String... topics) throws ExecutionException, InterruptedException {
@@ -21,12 +23,12 @@ public abstract class KafkaStreamsApp {
         properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
         AdminClient admin = AdminClient.create(properties);
-        System.out.println("-- creating  topics--");
+        logger.info("-- creating  topics--");
         //creating topics if not already there
         admin.createTopics(Arrays.stream(topics).map(topic->new NewTopic(topic, 1, (short)1))
                 .collect(Collectors.toList()));
         //listing
-        System.out.println("-- listing topics--");
+        logger.info("-- listing topics--");
         admin.listTopics().names().get().forEach(System.out::println);
 
         properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-streams-example");

@@ -6,12 +6,14 @@ import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KTable;
 import org.apache.kafka.streams.kstream.Named;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
 public class WordCountStreamsApp extends KafkaStreamsApp {
-
+    private static Logger logger = LogManager.getLogger(WordCountStreamsApp.class);
     public WordCountStreamsApp(String... topics) throws ExecutionException, InterruptedException {
         super(topics);
     }
@@ -34,9 +36,9 @@ public class WordCountStreamsApp extends KafkaStreamsApp {
 
         KafkaStreams streams= new KafkaStreams(topology,properties);
         streams.start();
-
-        System.out.println(streams.toString());
-
+        logger.info("-------Streams Application-----");
+        logger.info(topology.describe());
+        logger.info("-------Streams Application-----");
         Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
     }
 

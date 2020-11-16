@@ -5,6 +5,8 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Properties;
@@ -12,6 +14,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public abstract class KafkaConsumerApp {
+    private static Logger logger = LogManager.getLogger(KafkaConsumerApp.class);
     protected String[] topics;
     protected Properties properties;
 
