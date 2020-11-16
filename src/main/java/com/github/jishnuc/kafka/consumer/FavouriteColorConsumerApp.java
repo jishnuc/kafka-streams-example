@@ -16,7 +16,7 @@ public class FavouriteColorConsumerApp extends KafkaConsumerApp {
     private static Logger logger = LogManager.getLogger(FavouriteColorConsumerApp.class);
     public FavouriteColorConsumerApp(String... topics) throws ExecutionException, InterruptedException {
         super(topics);
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "word-count");
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "favourite-color");
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
     }
 
