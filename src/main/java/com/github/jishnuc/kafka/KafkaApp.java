@@ -1,5 +1,6 @@
 package com.github.jishnuc.kafka;
 
+import com.github.jishnuc.kafka.consumer.BankBalanceConsumerApp;
 import com.github.jishnuc.kafka.consumer.FavouriteColorConsumerApp;
 import com.github.jishnuc.kafka.consumer.WordCountConsumerApp;
 import com.github.jishnuc.kafka.producer.BankBalanceProducerApp;
@@ -59,6 +60,10 @@ public class KafkaApp {
             case "8":
                 BankBalanceProducerApp bap=new BankBalanceProducerApp("bank-balance-input");
                 bap.run();
+                break;
+            case "9":
+                BankBalanceConsumerApp bac=new BankBalanceConsumerApp("bank-balance-output");
+                bac.run();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + choice);
