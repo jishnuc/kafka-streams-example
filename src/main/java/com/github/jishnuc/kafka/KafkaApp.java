@@ -1,5 +1,7 @@
 package com.github.jishnuc.kafka;
 
+import com.github.jishnuc.kafka.consumer.FavouriteColorConsumerApp;
+import com.github.jishnuc.kafka.consumer.WordCountConsumerApp;
 import com.github.jishnuc.kafka.producer.FavouriteColorProducerApp;
 import com.github.jishnuc.kafka.producer.WordCountProducerApp;
 import com.github.jishnuc.kafka.stream.FavouriteColorStreamsApp;
@@ -22,22 +24,30 @@ public class KafkaApp {
         Scanner in= new Scanner(System.in);
         String choice = in.nextLine();
         switch(choice){
-            case "1": WordCountStreamsApp wc=new WordCountStreamsApp("word-count-input","word-count-output");
+            case "1":
+                WordCountStreamsApp wc=new WordCountStreamsApp("word-count-input","word-count-output");
                 wc.run();
                 break;
             case "2":
                 WordCountProducerApp wcp=new WordCountProducerApp("word-count-input");
                 wcp.run();
                 break;
-            case "3":break;
-            case "4": FavouriteColorStreamsApp fc=new FavouriteColorStreamsApp("user-color-input","user-color","color-count-output") ;
+            case "3":
+                WordCountConsumerApp wcc=new WordCountConsumerApp("word-count-output");
+                wcc.run();
+                break;
+            case "4":
+                FavouriteColorStreamsApp fc=new FavouriteColorStreamsApp("user-color-input","user-color","color-count-output") ;
                 fc.run();
                 break;
             case "5":
                 FavouriteColorProducerApp fcp=new FavouriteColorProducerApp("user-color-input");
                 fcp.run();
                 break;
-            case "6": break;
+            case "6":
+                FavouriteColorConsumerApp fcc=new FavouriteColorConsumerApp("color-count-output");
+                fcc.run();
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + choice);
         }
