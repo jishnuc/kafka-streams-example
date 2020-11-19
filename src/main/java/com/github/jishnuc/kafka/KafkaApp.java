@@ -6,6 +6,7 @@ import com.github.jishnuc.kafka.consumer.WordCountConsumerApp;
 import com.github.jishnuc.kafka.producer.BankBalanceProducerApp;
 import com.github.jishnuc.kafka.producer.FavouriteColorProducerApp;
 import com.github.jishnuc.kafka.producer.WordCountProducerApp;
+import com.github.jishnuc.kafka.stream.BankBalanceStreamsApp;
 import com.github.jishnuc.kafka.stream.FavouriteColorStreamsApp;
 import com.github.jishnuc.kafka.stream.WordCountStreamsApp;
 import org.apache.log4j.LogManager;
@@ -56,14 +57,16 @@ public class KafkaApp {
                 fcc.run();
                 break;
             case "7":
+                BankBalanceStreamsApp bb=new BankBalanceStreamsApp("bank-balance-input","bank-balance-output");
+                bb.run();
                 break;
             case "8":
-                BankBalanceProducerApp bap=new BankBalanceProducerApp("bank-balance-input");
-                bap.run();
+                BankBalanceProducerApp bbp=new BankBalanceProducerApp("bank-balance-input");
+                bbp.run();
                 break;
             case "9":
-                BankBalanceConsumerApp bac=new BankBalanceConsumerApp("bank-balance-output");
-                bac.run();
+                BankBalanceConsumerApp bbc=new BankBalanceConsumerApp("bank-balance-output");
+                bbc.run();
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + choice);

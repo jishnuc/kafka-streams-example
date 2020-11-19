@@ -21,9 +21,11 @@ public abstract class KafkaProducerApp {
         AdminClient admin = AdminClient.create(properties);
         logger.info("-- creating  topics--");
         //creating topics if not already there
+        //admin.deleteTopics(Collections.singleton(topic));
         admin.createTopics(Collections.singleton(new NewTopic(topic, 1, (short)1)));
         //listing
         logger.info("-- listing topics--");
+
         admin.listTopics().names().get().forEach(System.out::println);
 
         this.topic=topic;
