@@ -1,14 +1,15 @@
 package com.github.jishnuc.kafka.producer;
 
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 public abstract class KafkaProducerApp {
@@ -18,16 +19,14 @@ public abstract class KafkaProducerApp {
     public KafkaProducerApp(String topic) throws ExecutionException, InterruptedException {
         properties=new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        AdminClient admin = AdminClient.create(properties);
-        logger.info("-- creating  topics--");
-        //creating topics if not already there
-        //admin.deleteTopics(Collections.singleton(topic));
-        admin.createTopics(Collections.singleton(new NewTopic(topic, 1, (short)1)));
-        //listing
-        logger.info("-- listing topics--");
-
-        admin.listTopics().names().get().forEach(System.out::println);
-
+        try(AdminClient admin = AdminClient.create(properties)){
+            Set<String> names = admin.listTopics(new ListTopicsOptions().listInternal(false)).names().get();
+            if(!names.containsAll(Arrays.asList(topic))){
+                throw  new RuntimeException("Please create topics before running application");
+            }
+        }catch (Exception e){
+            logger.error("Unable connect to kafka ",e);
+        }
         this.topic=topic;
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);

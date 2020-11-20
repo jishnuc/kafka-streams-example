@@ -1,5 +1,6 @@
 package com.github.jishnuc.kafka;
 
+import com.github.jishnuc.kafka.admin.KafkaAdminController;
 import com.github.jishnuc.kafka.consumer.BankBalanceConsumerApp;
 import com.github.jishnuc.kafka.consumer.FavouriteColorConsumerApp;
 import com.github.jishnuc.kafka.consumer.WordCountConsumerApp;
@@ -18,6 +19,8 @@ import java.util.concurrent.ExecutionException;
 public class KafkaApp {
     private static Logger logger = LogManager.getLogger(KafkaApp.class);
     public static void main(String[] args) throws ExecutionException, InterruptedException {
+
+        KafkaAdminController admin=new KafkaAdminController();
         logger.info(".............Starting the KafkaStreamsApp.....");
         logger.info("Enter program you want to run");
         logger.info("1. Word Count Streams App");
@@ -29,6 +32,9 @@ public class KafkaApp {
         logger.info("7. Bank Balance Streams App");
         logger.info("8. Bank Balance Producer App");
         logger.info("9. Bank Balance Consumer App");
+        logger.info("10. List Kafka Topics in Cluster");
+        logger.info("11. List Kafka Nodes & Config in Cluster");
+        logger.info("12. Create Kafka Topic");
         Scanner in= new Scanner(System.in);
         String choice = in.nextLine();
         switch(choice){
@@ -67,6 +73,21 @@ public class KafkaApp {
             case "9":
                 BankBalanceConsumerApp bbc=new BankBalanceConsumerApp("bank-balance-output");
                 bbc.run();
+                break;
+            case "10":
+                admin.listTopics();
+                break;
+            case "11":
+                admin.printKafkaConfiguration();
+                break;
+            case "12":
+                System.out.println("Enter Topic Name: ");
+                String topicName = in.nextLine();
+                System.out.println("Enter Topic Partition: ");
+                Integer partition = in.nextInt();
+                System.out.println("Enter Topic Replication: ");
+                Integer replication = in.nextInt();
+                admin.createTopic(topicName,partition,replication);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + choice);

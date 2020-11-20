@@ -1,7 +1,7 @@
 package com.github.jishnuc.kafka.stream;
 
 import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.ListTopicsOptions;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
@@ -10,8 +10,8 @@ import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 public abstract class KafkaStreamsApp {
     private static Logger logger = LogManager.getLogger(KafkaStreamsApp.class);
@@ -22,14 +22,14 @@ public abstract class KafkaStreamsApp {
 
         properties.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 
-        AdminClient admin = AdminClient.create(properties);
-        logger.info("-- creating  topics--");
-        //creating topics if not already there
-        admin.createTopics(Arrays.stream(topics).map(topic->new NewTopic(topic, 1, (short)1))
-                .collect(Collectors.toList()));
-        //listing
-        logger.info("-- listing topics--");
-        admin.listTopics().names().get().forEach(System.out::println);
+        try(AdminClient admin = AdminClient.create(properties)){
+            Set<String> names = admin.listTopics(new ListTopicsOptions().listInternal(false)).names().get();
+            if(!names.containsAll(Arrays.asList(topics))){
+                throw  new RuntimeException("Please create topics before running application");
+            }
+        }catch (Exception e){
+            logger.error("Unable connect to kafka ",e);
+        }
 
         properties.put(StreamsConfig.APPLICATION_ID_CONFIG, "kafka-streams-example");
         properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
