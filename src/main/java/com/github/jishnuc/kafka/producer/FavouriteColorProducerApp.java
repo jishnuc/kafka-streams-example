@@ -1,6 +1,7 @@
 package com.github.jishnuc.kafka.producer;
 
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -16,7 +17,7 @@ public class FavouriteColorProducerApp extends KafkaProducerApp {
 
     @Override
     public void run() {
-        KafkaProducer<String,String> producer=new KafkaProducer<String, String>(properties);
+        Producer<String,String> producer=new KafkaProducer<String, String>(properties);
         Scanner in= new Scanner(System.in);
         Runtime.getRuntime().addShutdownHook(new Thread(()->{
             if(producer!=null)producer.close();

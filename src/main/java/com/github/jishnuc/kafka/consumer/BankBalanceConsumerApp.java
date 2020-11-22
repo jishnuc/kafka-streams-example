@@ -2,10 +2,7 @@ package com.github.jishnuc.kafka.consumer;
 
 import com.github.jishnuc.kafka.model.BankBalance;
 import com.github.jishnuc.kafka.serdes.KafkaJsonDeserializer;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -34,7 +31,7 @@ public class BankBalanceConsumerApp extends KafkaConsumerApp {
 
     @Override
     public void run() {
-        KafkaConsumer<String, BankBalance> consumer = new KafkaConsumer<>(properties,
+        Consumer<String, BankBalance> consumer = new KafkaConsumer<>(properties,
                                                                           new StringDeserializer(),
                                                                             bankBalanceJsonDeserializer);
 

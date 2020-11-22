@@ -1,20 +1,16 @@
 package com.github.jishnuc.kafka.consumer;
 
 import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.serialization.LongDeserializer;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
-public class WordCountConsumerApp extends KafkaConsumerApp {
-    private static Logger logger = LogManager.getLogger(WordCountConsumerApp.class);
-    public WordCountConsumerApp(String topic) throws ExecutionException, InterruptedException {
-        super(topic);
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "word-count");
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, LongDeserializer.class);
+public class UserPurchaseConsumer extends KafkaConsumerApp{
+
+    public UserPurchaseConsumer(String... topics) throws ExecutionException, InterruptedException {
+        super(topics);
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "user-purchase-consumer");
     }
 
     @Override
@@ -33,6 +29,4 @@ public class WordCountConsumerApp extends KafkaConsumerApp {
             }
         }
     }
-
-
 }

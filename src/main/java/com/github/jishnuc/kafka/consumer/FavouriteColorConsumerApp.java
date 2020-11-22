@@ -1,9 +1,6 @@
 package com.github.jishnuc.kafka.consumer;
 
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.LongDeserializer;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -22,7 +19,7 @@ public class FavouriteColorConsumerApp extends KafkaConsumerApp {
 
     @Override
     public void run() {
-        KafkaConsumer<String,Long> consumer=new KafkaConsumer<>(properties);
+        Consumer<String,Long> consumer=new KafkaConsumer<>(properties);
         consumer.subscribe(Arrays.asList(topics));
         Runtime.getRuntime().addShutdownHook(new Thread(consumer::close));
 

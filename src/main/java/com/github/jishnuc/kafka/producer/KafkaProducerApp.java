@@ -19,20 +19,27 @@ public abstract class KafkaProducerApp {
     public KafkaProducerApp(String topic) throws ExecutionException, InterruptedException {
         properties=new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        try(AdminClient admin = AdminClient.create(properties)){
-            Set<String> names = admin.listTopics(new ListTopicsOptions().listInternal(false)).names().get();
-            if(!names.containsAll(Arrays.asList(topic))){
-                throw  new RuntimeException("Please create topics before running application");
+        if(topic!=null){
+            try(AdminClient admin = AdminClient.create(properties)){
+                Set<String> names = admin.listTopics(new ListTopicsOptions().listInternal(false)).names().get();
+                if(!names.containsAll(Arrays.asList(topic))){
+                    throw  new RuntimeException("Please create topics before running application");
+                }
+            }catch (Exception e){
+                logger.error("Unable connect to kafka ",e);
             }
-        }catch (Exception e){
-            logger.error("Unable connect to kafka ",e);
+            this.topic=topic;
         }
-        this.topic=topic;
+
         properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
     }
 
-    public abstract void run();
+    public KafkaProducerApp() throws ExecutionException, InterruptedException {
+        this(null);
+    }
+
+    public abstract void run() throws ExecutionException, InterruptedException;
 }
 

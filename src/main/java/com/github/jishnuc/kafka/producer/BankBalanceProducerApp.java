@@ -4,6 +4,7 @@ import com.github.jishnuc.kafka.model.BankBalance;
 import com.github.jishnuc.kafka.serdes.KafkaJsonSerializer;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -27,7 +28,7 @@ public class BankBalanceProducerApp extends KafkaProducerApp {
     @Override
     public void run() {
         logger.info("Will be Publishing 100 random Bank balances every 1 min for 5 min....");
-        KafkaProducer<String,BankBalance> producer=new KafkaProducer<>(properties,new StringSerializer(),new KafkaJsonSerializer<>());
+        Producer<String,BankBalance> producer=new KafkaProducer<>(properties,new StringSerializer(),new KafkaJsonSerializer<>());
         Runtime.getRuntime().addShutdownHook(new Thread(()->{
             if(producer!=null)producer.close();
         }));
